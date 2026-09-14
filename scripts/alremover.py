@@ -9,12 +9,11 @@ EXTENSION_ROOT = Path(__file__).resolve().parents[1]
 if str(EXTENSION_ROOT) not in sys.path:
     sys.path.insert(0, str(EXTENSION_ROOT))
 
-from modules import scripts, images, script_callbacks, shared
+from modules import scripts, images, shared
 from modules.processing import process_images, Processed
 from alr_neo.engine import MODES, MODE_IDS, DEFAULT_MODE, extract
 from alr_neo.layers import KINDS, SLUGS, normalize, layers
 from alr_neo.metadata import read_metadata, tagged_info, provenance
-from alr_neo.webui import on_ui_tabs
 
 
 def _at(values, index, default=None):
@@ -61,14 +60,10 @@ class Script(scripts.Script):
             expand = gr.Slider(-8, 8, value=0, step=1, label="輪郭の調整（px／＋で広げる・−で縮める）")
             gr.Markdown("背景は人物部分が透明なPNGです。両方にチェックすると両方を出力します。\n"
                         "表示と自動保存は独立です。自動保存のチェックを全て外すと保存しません。\n"
-                        "元の色を保持し、輪郭の調整は初期値0です。部分修正・原寸での既存画像処理は［ALRemover］タブへ。")
-            gr.Markdown("人物ごとの分離は［ALRemover 人物別（実験）］タブで調整できます。自動で分けられなかった前景は［未割当］として出力します。")
-        with gr.Accordion("実験的な機能", open=False):
-            split_people = gr.Checkbox(False, label="人物ごとに分ける（自動候補・実験）")
-            gr.Markdown("一人の切り抜きではオフのまま使います。接触する腕や髪の所属を誤ることがあります。")
-        return [mode, display, save, direct, expand, split_people]
+                        "元の色を保持し、輪郭の調整は初期値0です。")
+        return [mode, display, save, direct, expand]
 
-    def run(self, p, mode, display, save, direct, expand, split_people=False):
+    def run(self, p, mode, display, save, direct, expand):
         if not display and not save:
             raise gr.Error("表示または保存する画像を選択してください。")
         display, save = display or [], save or []
@@ -102,17 +97,8 @@ class Script(scripts.Script):
                 except InterruptedError:
                     interrupted = True
                     break
-                if split_people:
-                    from alr_neo.people import script_items
-                    try:
-                        items = list(script_items(source, mask, mode, cancel=lambda: shared.state.interrupted,
-                                                 status=lambda text: setattr(shared.state, "textinfo", text)))
-                    except InterruptedError:
-                        interrupted = True
-                        break
-                else:
-                    results = layers(source, mask)
-                    items = [(kind, kind, SLUGS[kind], results[kind]) for kind in KINDS]
+                results = layers(source, mask)
+                items = [(kind, kind, SLUGS[kind], results[kind]) for kind in KINDS]
                 for kind, label, slug, result in items:
                     if kind not in display and kind not in save:
                         continue
@@ -150,6 +136,3 @@ class Script(scripts.Script):
         if direct and samples:
             proc.width, proc.height = samples[0][0].size
         return proc
-
-
-script_callbacks.on_ui_tabs(on_ui_tabs)

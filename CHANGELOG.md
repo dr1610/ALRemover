@@ -8,7 +8,7 @@
 - Honor ComfyUI's selected device and free memory through its model manager before inference. Release the extension's CPU model cache after each cutout node execution.
 - Use BEN2's float32 preprocessing on non-CUDA devices, including explicit CPU selection on CUDA-capable machines.
 - Let the installer run under either host, without pinning or replacing host Torch/Transformers versions.
-- Keep the existing Neo tab and Script integration. Multi-person tools remain Neo-only and experimental.
+- Keep Neo Script integration. Remove dedicated Neo tabs and experimental multi-person features, dependencies and guides.
 
 ## 1.3.0-beta.1 — ALRemover public beta
 
