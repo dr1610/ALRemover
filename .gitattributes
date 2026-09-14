@@ -1,0 +1,3 @@
+* text=auto
+# Preserve upstream files byte-for-byte, including their original whitespace.
+alr_neo/vendor/* -text -whitespace

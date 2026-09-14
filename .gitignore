@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+models/
+test-results/
+.venv/
+venv/
+outputs/
+.cache/
+*.safetensors
+*.pth
+*.alrneo.zip
+.env
+.env.*
