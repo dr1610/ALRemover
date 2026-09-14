@@ -1,10 +1,12 @@
 # ALRemover
 
-**キャラクターを切り抜いて、必要な所だけ直して保存する、Forge Neo用の背景分離拡張です。**
+**キャラクターを切り抜いて、必要な所だけ直して保存する、Forge Neo・ComfyUI用の背景分離拡張です。**
 
-公開ベータ **v1.3.0-beta.1**。一人のキャラクターを中心とした使い方を想定しています。既定モデルはBEN2です。髪・白い服・肌・背景の線などは部分修正が必要になる場合があります。
+公開ベータ **v1.4.0-beta.1**。一人のキャラクターを中心とした使い方を想定しています。既定モデルはBEN2です。髪・白い服・肌・背景の線などは部分修正が必要になる場合があります。
 
-ALRemover is a local extension for [Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic/tree/neo): remove a character's background with BEN2, correct selected areas with keep/erase brushes, and save transparent character/background PNGs. The UI and detailed guide are currently in Japanese. Multi-person separation is experimental.
+**ComfyUIで使う場合は [ComfyUI導入・部分修正ガイド](docs/comfyui.md) へ。** 切り抜き・部分修正・RGBA出力の3ノードと、読み込んで使えるワークフローを同梱しています。以下はForge Neo向けの説明です。
+
+ALRemover runs locally in [Forge Neo](https://github.com/Haoming02/sd-webui-forge-classic/tree/neo) and [ComfyUI](docs/comfyui.md): remove a character's background with BEN2, correct selected areas with keep/erase masks, and save transparent character/background PNGs. The detailed guide is currently in Japanese. Multi-person separation is experimental and available in Neo only.
 
 ## 導入
 

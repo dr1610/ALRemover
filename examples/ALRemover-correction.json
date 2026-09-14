@@ -1,0 +1,462 @@
+{
+  "id": "97d28e00-76e8-41d0-aeb3-98cdbad60882",
+  "revision": 0,
+  "last_node_id": 9,
+  "last_link_id": 10,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        120
+      ],
+      "size": [
+        315,
+        350
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4,
+            6
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            5,
+            8
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "choose_source.png",
+        "image"
+      ],
+      "title": "元画像 / Original"
+    },
+    {
+      "id": 2,
+      "type": "ALRemoverCutout",
+      "pos": [
+        415,
+        120
+      ],
+      "size": [
+        315,
+        160
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 4
+        },
+        {
+          "name": "input_transparency",
+          "type": "MASK",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "foreground_mask",
+          "type": "MASK",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ALRemoverCutout"
+      },
+      "widgets_values": [
+        "BEN2",
+        0
+      ]
+    },
+    {
+      "id": 3,
+      "type": "ALRemoverCorrectMask",
+      "pos": [
+        790,
+        120
+      ],
+      "size": [
+        315,
+        160
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "foreground_mask",
+          "type": "MASK",
+          "link": 1
+        },
+        {
+          "name": "keep",
+          "type": "MASK",
+          "link": 2
+        },
+        {
+          "name": "erase",
+          "type": "MASK",
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "foreground_mask",
+          "type": "MASK",
+          "links": [
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ALRemoverCorrectMask"
+      },
+      "widgets_values": [
+        false
+      ]
+    },
+    {
+      "id": 7,
+      "type": "LoadImage",
+      "pos": [
+        415,
+        480
+      ],
+      "size": [
+        315,
+        350
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            2
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "choose_source.png",
+        "image"
+      ],
+      "title": "残す部分を塗る / Keep"
+    },
+    {
+      "id": 8,
+      "type": "LoadImage",
+      "pos": [
+        790,
+        480
+      ],
+      "size": [
+        315,
+        350
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            3
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "choose_source.png",
+        "image"
+      ],
+      "title": "消す部分を塗る / Erase"
+    },
+    {
+      "id": 4,
+      "type": "ALRemoverLayers",
+      "pos": [
+        1165,
+        120
+      ],
+      "size": [
+        315,
+        160
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "foreground_mask",
+          "type": "MASK",
+          "link": 7
+        },
+        {
+          "name": "input_transparency",
+          "type": "MASK",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "character_rgba",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "background_rgba",
+          "type": "IMAGE",
+          "links": [
+            10
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "character_alpha",
+          "type": "MASK",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ALRemoverLayers"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "SaveImage",
+      "pos": [
+        1545,
+        80
+      ],
+      "size": [
+        350,
+        350
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ALRemover/character"
+      ],
+      "title": "キャラクター PNG"
+    },
+    {
+      "id": 6,
+      "type": "SaveImage",
+      "pos": [
+        1545,
+        480
+      ],
+      "size": [
+        350,
+        350
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 10
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ALRemover/background"
+      ],
+      "title": "背景 PNG"
+    },
+    {
+      "id": 9,
+      "type": "Note",
+      "pos": [
+        40,
+        540
+      ],
+      "size": [
+        315,
+        300
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Note"
+      },
+      "widgets_values": [
+        "元画像を選んで実行します。BEN2が初回にモデルを取得します。人物と背景を透過PNGで保存します。保存せず表示だけにする場合はSave ImageをPreview Imageへ置き換えます。\n部分修正：Keep/Eraseにも同じ元画像を選択。各ノードを右クリック→Open in Mask Editor。Clearで初期マスクを消してから該当部分を塗り、Save。部分修正のenabledをオンにして再実行します。オフで修正前と比較できます。元画像ノードのマスクは編集しないでください。"
+      ],
+      "title": "使い方 / Instructions"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      3,
+      0,
+      "MASK"
+    ],
+    [
+      2,
+      7,
+      1,
+      3,
+      1,
+      "MASK"
+    ],
+    [
+      3,
+      8,
+      1,
+      3,
+      2,
+      "MASK"
+    ],
+    [
+      4,
+      1,
+      0,
+      2,
+      0,
+      "IMAGE"
+    ],
+    [
+      5,
+      1,
+      1,
+      2,
+      1,
+      "MASK"
+    ],
+    [
+      6,
+      1,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      3,
+      0,
+      4,
+      1,
+      "MASK"
+    ],
+    [
+      8,
+      1,
+      1,
+      4,
+      2,
+      "MASK"
+    ],
+    [
+      9,
+      4,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      10,
+      4,
+      1,
+      6,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7,
+      "offset": [
+        50,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

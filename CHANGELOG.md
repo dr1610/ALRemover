@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0-beta.1 — ComfyUI support
+
+- Add ComfyUI nodes for cutout, local keep/erase correction and character/background RGBA layers. Standard Preview Image and Save Image nodes handle display and PNG export.
+- Include basic and correction workflows, a Mask Editor guide, and a reproducible ComfyUI API test.
+- Preserve original RGB and existing alpha; follow ComfyUI's inverse-alpha convention at Load Image inputs. Mask corrections reuse ComfyUI's cached extraction result.
+- Honor ComfyUI's selected device and free memory through its model manager before inference. Release the extension's CPU model cache after each cutout node execution.
+- Use BEN2's float32 preprocessing on non-CUDA devices, including explicit CPU selection on CUDA-capable machines.
+- Let the installer run under either host, without pinning or replacing host Torch/Transformers versions.
+- Keep the existing Neo tab and Script integration. Multi-person tools remain Neo-only and experimental.
+
 ## 1.3.0-beta.1 — ALRemover public beta
 
 - Rename the product to **ALRemover**. The main workflow is one character: extract, correct locally, save.

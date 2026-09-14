@@ -1,0 +1,310 @@
+{
+  "id": "83221e62-7aba-47db-8ce3-a365a101be8e",
+  "revision": 0,
+  "last_node_id": 9,
+  "last_link_id": 7,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "LoadImage",
+      "pos": [
+        40,
+        120
+      ],
+      "size": [
+        315,
+        350
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            1,
+            3
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            2,
+            5
+          ],
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "choose_source.png",
+        "image"
+      ],
+      "title": "元画像 / Original"
+    },
+    {
+      "id": 2,
+      "type": "ALRemoverCutout",
+      "pos": [
+        415,
+        120
+      ],
+      "size": [
+        315,
+        160
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 1
+        },
+        {
+          "name": "input_transparency",
+          "type": "MASK",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "foreground_mask",
+          "type": "MASK",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ALRemoverCutout"
+      },
+      "widgets_values": [
+        "BEN2",
+        0
+      ]
+    },
+    {
+      "id": 4,
+      "type": "ALRemoverLayers",
+      "pos": [
+        790,
+        120
+      ],
+      "size": [
+        315,
+        160
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "name": "foreground_mask",
+          "type": "MASK",
+          "link": 4
+        },
+        {
+          "name": "input_transparency",
+          "type": "MASK",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "character_rgba",
+          "type": "IMAGE",
+          "links": [
+            6
+          ],
+          "slot_index": 0
+        },
+        {
+          "name": "background_rgba",
+          "type": "IMAGE",
+          "links": [
+            7
+          ],
+          "slot_index": 1
+        },
+        {
+          "name": "character_alpha",
+          "type": "MASK",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ALRemoverLayers"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 5,
+      "type": "SaveImage",
+      "pos": [
+        1170,
+        80
+      ],
+      "size": [
+        350,
+        350
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 6
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ALRemover/character"
+      ],
+      "title": "キャラクター PNG"
+    },
+    {
+      "id": 6,
+      "type": "SaveImage",
+      "pos": [
+        1170,
+        480
+      ],
+      "size": [
+        350,
+        350
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 7
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "ALRemover/background"
+      ],
+      "title": "背景 PNG"
+    },
+    {
+      "id": 9,
+      "type": "Note",
+      "pos": [
+        40,
+        540
+      ],
+      "size": [
+        315,
+        300
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "Note"
+      },
+      "widgets_values": [
+        "元画像を選んで実行します。BEN2が初回にモデルを取得します。人物と背景を透過PNGで保存します。保存せず表示だけにする場合はSave ImageをPreview Imageへ置き換えます。"
+      ],
+      "title": "使い方 / Instructions"
+    }
+  ],
+  "links": [
+    [
+      1,
+      1,
+      0,
+      2,
+      0,
+      "IMAGE"
+    ],
+    [
+      2,
+      1,
+      1,
+      2,
+      1,
+      "MASK"
+    ],
+    [
+      3,
+      1,
+      0,
+      4,
+      0,
+      "IMAGE"
+    ],
+    [
+      4,
+      2,
+      0,
+      4,
+      1,
+      "MASK"
+    ],
+    [
+      5,
+      1,
+      1,
+      4,
+      2,
+      "MASK"
+    ],
+    [
+      6,
+      4,
+      0,
+      5,
+      0,
+      "IMAGE"
+    ],
+    [
+      7,
+      4,
+      1,
+      6,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.7,
+      "offset": [
+        50,
+        30
+      ]
+    }
+  },
+  "version": 0.4
+}

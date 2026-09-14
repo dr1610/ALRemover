@@ -102,12 +102,12 @@ def _check(cancel):
         raise InterruptedError("切り抜きを中断しました。")
 
 
-def _infer(name, rgb, directory, cancel, status):
+def _infer(name, rgb, directory, cancel, status, device=None):
     import torch
     _check(cancel)
     status(f"{name}: モデルを準備")
     model = _load(name, directory)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device(device) if device is not None else torch.device("cuda" if torch.cuda.is_available() else "cpu")
     if device.type == "cuda":
         try:
             from backend import memory_management
@@ -134,7 +134,19 @@ def _infer(name, rgb, directory, cancel, status):
                     rgb.size, Image.Resampling.BICUBIC)
                 del x, prediction
             else:
-                alpha = model.inference(rgb.copy(), refine_foreground=False).getchannel("A")
+                if device.type == "cuda":
+                    alpha = model.inference(rgb.copy(), refine_foreground=False).getchannel("A")
+                else:
+                    # Upstream inference chooses half precision whenever CUDA exists,
+                    # even when the host explicitly selects CPU. Use its float32 path.
+                    from .vendor import ben2
+                    ben2.set_random_seed(9)
+                    prepared, h, w, original = ben2.rgb_loader_refiner(rgb.copy())
+                    x = ben2.img_transform32(prepared).unsqueeze(0).to(device)
+                    prediction = model(x)
+                    alpha = ben2.transforms.ToPILImage()(
+                        ben2.postprocess_image(prediction, im_size=[w, h])).resize(original.size)
+                    del x, prediction
         _check(cancel)
         return alpha
     finally:
@@ -144,7 +156,7 @@ def _infer(name, rgb, directory, cancel, status):
             torch.cuda.empty_cache()
 
 
-def extract(source, mode=DEFAULT_MODE, expand=0, directory=None, cancel=None, status=None):
+def extract(source, mode=DEFAULT_MODE, expand=0, directory=None, cancel=None, status=None, device=None):
     if mode not in MODES:
         raise ValueError("切り抜き方式を選択してください。")
     source = normalize(source)
@@ -155,14 +167,14 @@ def extract(source, mode=DEFAULT_MODE, expand=0, directory=None, cancel=None, st
     with _LOCK, preserve_runtime():
         stages = CASCADE_STAGES.get(MODE_IDS[mode])
         if stages:
-            first = _infer(stages[0], rgb, directory, cancel, report)
+            first = _infer(stages[0], rgb, directory, cancel, report, device)
             intermediate = rgb.copy()
             intermediate.putalpha(multiply_alpha(source.getchannel("A"), first))
             composite = Image.alpha_composite(gray, intermediate).convert("RGB")
-            second = _infer(stages[1], composite, directory, cancel, report)
+            second = _infer(stages[1], composite, directory, cancel, report, device)
             mask = multiply_alpha(first, second)
         else:
-            mask = _infer(MODE_IDS[mode], rgb, directory, cancel, report)
+            mask = _infer(MODE_IDS[mode], rgb, directory, cancel, report, device)
         return adjust_mask(mask, expand)
 
 
